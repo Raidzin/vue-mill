@@ -1,30 +1,16 @@
-name: Build & Deploy on GitHub Pages
 on:
   push:
     branches:
       - "main"
 jobs:
-  build_and_deploy:
-    name: Build & Deploy
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          version: 20.x
-      - name: Checkout git
-        uses: actions/checkout@v4
-      - name: Clean install packages
-        run: npm ci
-      - name: Build Vue app
-        run: |
+      - uses: actions/checkout@v4
+      - run: |
+          date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout --orphan gh-pages
-          npm run build
-          git --work-tree dist add --all
-          git --work-tree dist commit -m 'Deploy'
-          git push origin HEAD:gh-pages --force
-          rm -r dist
-          git checkout -f main
-          git branch -D gh-pages
+          git add .
+          git commit -m "generated"
+          git push
