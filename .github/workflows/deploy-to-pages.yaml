@@ -22,7 +22,6 @@ jobs:
           npm run build
           git --work-tree dist add --all
           git --work-tree dist commit -m 'Deploy'
-          git config user.name "Raidzin" && git config user.email "60663550+Raidzin@users.noreply.github.com"
           git push origin HEAD:gh-pages --force
           rm -r dist
           git checkout -f main
