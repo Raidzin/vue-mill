@@ -1,0 +1,20 @@
+name: Build & Deploy on GitHub Pages
+on:
+  push:
+    branches:
+      - "main"
+jobs:
+  build_and_deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          version: 20.x
+      - name: Checkout git
+        uses: actions/checkout@v2
+      - name: Clean install packages
+        run: npm ci
+      - name: Run deploy script
+        run: npm run gh-pages-deploy
