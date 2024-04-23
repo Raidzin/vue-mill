@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Ну короче тут будет фронтенд для игры <a href="https://github.com/Raidzin/MillServer">Мельница</a></h1>
   </div>
 </template>
 
