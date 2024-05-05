@@ -1,85 +1,57 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <q-layout view="hHh lpR fFf">
+    <q-header elevated class="bg-primary text-white" height-hint="98">
+      <q-toolbar>
+        <q-toolbar-title>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+          </q-avatar>
+          Title
+        </q-toolbar-title>
+        <div v-if="tokenStore.token">
+          <div class="row">
+            <q-tabs align="left">
+              <q-route-tab to="/" label="Главная" />
+              <q-route-tab to="/login" label="Войти" />
+            </q-tabs>
+            <q-avatar><img :src="userData.avatar_url" /></q-avatar>
+          </div>
+        </div>
+      </q-toolbar>
+    </q-header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <q-page-container>
+      <router-view />
+    </q-page-container>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <q-footer elevated class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+          </q-avatar>
+          <div>Title</div>
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
+  </q-layout>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script setup>
+import { RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useTokenStore } from './stores/auth'
+import { axiosClient } from './mill-client'
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+const tokenStore = useTokenStore()
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+const userData = ref({})
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+onMounted(async () => {
+  try {
+    userData.value = (await axiosClient.getUserData(tokenStore.token)).data
+  } catch (err) {
+    console.error(err)
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+})
+</script>
